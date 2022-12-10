@@ -1,10 +1,20 @@
 package com.kpi;
 
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+
 public class Main {
+    private static final Logger LOGGER = Logger.getLogger(Main.class);
 
     public static void main(String[] args) {
+        try {
+            Menu.showMenu();
+        } catch (IOException e) {
+            LOGGER.error("FileReader works incorrect");
+        }
+        /*String s = "Бабій Олена Олексіївна";
         HammingCode hammingCode = new HammingCode();
-        String s = "a h";
         byte[] bytes = s.getBytes();
 
         StringBuilder binaryCode = HammingCode.convertByteArraysToBinary(bytes);
@@ -12,16 +22,37 @@ public class Main {
 
         binaryCode = hammingCode.insertBits(binaryCode);
         StringBuilder bits = hammingCode.findBits(binaryCode);
-        System.out.println(bits);
         binaryCode = hammingCode.setBits(binaryCode, bits);
+
+        Character c = hammingCode.countXOR(binaryCode);
+        binaryCode.insert(0, c);
         System.out.println("Hamming Code: " + binaryCode);
 
-        int place = 1;
-        binaryCode = hammingCode.reverseValue(binaryCode, place - 1);
+        //binaryCode = hammingCode.reverseValue(binaryCode, 0);
+        //binaryCode = hammingCode.reverseValue(binaryCode, 4);
+        binaryCode = hammingCode.reverseValue(binaryCode, 20);
+
+        System.out.println("Message with mistakes: " + binaryCode);
+
+        c = hammingCode.countXOR(binaryCode);
+        binaryCode.deleteCharAt(0);
         bits = hammingCode.findBits(binaryCode);
-        binaryCode = hammingCode.removeMistake(bits, binaryCode);
-        System.out.println("Hamming Code (mistake is removed): " + binaryCode);
-        binaryCode = hammingCode.deleteBits(binaryCode);
-        System.out.println("Decoded message: " + binaryCode);
+
+        char mistake = hammingCode.checkMistake(bits);
+
+        if(c == '0' && mistake == '0') {
+            System.out.println("No mistakes");
+            binaryCode = hammingCode.deleteBits(binaryCode);
+            System.out.println("Decoded message: " + binaryCode);
+        }
+        else if (c == '0' && mistake == '1')
+            System.out.println("There are two mistakes");
+        else if(c == '1' && mistake == '1') {
+            System.out.println("There is one mistake");
+            binaryCode = hammingCode.removeMistake(bits, binaryCode);
+            System.out.println("Hamming Code (mistake is removed): " + binaryCode);
+            binaryCode = hammingCode.deleteBits(binaryCode);
+            System.out.println("Decoded message: " + binaryCode);
+        }*/
     }
 }

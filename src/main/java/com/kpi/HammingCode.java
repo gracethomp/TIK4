@@ -97,4 +97,25 @@ public class HammingCode {
         code = reverseValue(code, index - 1);
         return code;
     }
+
+    public Character checkMistake(StringBuilder bits) {
+        for(int i = 0; i < bits.length(); i++)
+            if(bits.charAt(i) == '1')
+                return '1';
+        return '0';
+    }
+
+    public static void doCodingDistanceThree (StringBuilder binaryCode, int place, HammingCode hammingCode){
+
+        System.out.println("Hamming Code: " + binaryCode);
+
+        binaryCode = hammingCode.reverseValue(binaryCode, place - 1);
+        System.out.println("Message with mistake: " + binaryCode);
+
+        StringBuilder bits = hammingCode.findBits(binaryCode);
+        binaryCode = hammingCode.removeMistake(bits, binaryCode);
+        System.out.println("Hamming Code (mistake is removed): " + binaryCode);
+        binaryCode = hammingCode.deleteBits(binaryCode);
+        System.out.println("Decoded message: " + binaryCode);
+    }
 }
