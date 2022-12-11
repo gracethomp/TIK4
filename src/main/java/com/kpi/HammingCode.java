@@ -105,17 +105,40 @@ public class HammingCode {
         return '0';
     }
 
-    public static void doCodingDistanceThree (StringBuilder binaryCode, int place, HammingCode hammingCode){
-
+    public static void doEncodeDecodeDistanceThree(StringBuilder binaryCode, int place, HammingCode hammingCode){
         System.out.println("Hamming Code: " + binaryCode);
 
-        binaryCode = hammingCode.reverseValue(binaryCode, place - 1);
-        System.out.println("Message with mistake: " + binaryCode);
+        if(place != -1) {
+            binaryCode = hammingCode.reverseValue(binaryCode, place - 1);
+            System.out.println("Message with mistake: " + binaryCode);
 
-        StringBuilder bits = hammingCode.findBits(binaryCode);
-        binaryCode = hammingCode.removeMistake(bits, binaryCode);
-        System.out.println("Hamming Code (mistake is removed): " + binaryCode);
+            StringBuilder bits = hammingCode.findBits(binaryCode);
+            binaryCode = hammingCode.removeMistake(bits, binaryCode);
+            System.out.println("Hamming Code (mistake is removed): " + binaryCode);
+        }
         binaryCode = hammingCode.deleteBits(binaryCode);
         System.out.println("Decoded message: " + binaryCode);
+    }
+
+    public static void doCodingDistanceFour(StringBuilder binaryCode, HammingCode hammingCode) {
+        Character c = hammingCode.countXOR(binaryCode);
+        binaryCode.deleteCharAt(0);
+        StringBuilder bits = hammingCode.findBits(binaryCode);
+        char mistake = hammingCode.checkMistake(bits);
+
+        if(c == '0' && mistake == '0') {
+            System.out.println("No mistakes");
+            binaryCode = hammingCode.deleteBits(binaryCode);
+            System.out.println("Decoded message: " + binaryCode);
+        }
+        else if (c == '0' && mistake == '1')
+            System.out.println("There are two mistakes");
+        else {
+            System.out.println("There is one mistake");
+            binaryCode = hammingCode.removeMistake(bits, binaryCode);
+            System.out.println("Hamming Code (mistake is removed): " + binaryCode);
+            binaryCode = hammingCode.deleteBits(binaryCode);
+            System.out.println("Decoded message: " + binaryCode);
+        }
     }
 }

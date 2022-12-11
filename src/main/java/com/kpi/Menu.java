@@ -32,36 +32,68 @@ public class Menu {
     }
 
     private static void chooseHD(StringBuilder string) {
-        System.out.println(CODING_DISTANCE_CHOICE);
         Scanner sc = new Scanner(System.in);
+        HammingCode hammingCode = new HammingCode();
+        byte[] bytes = string.toString().getBytes();
+        StringBuilder binaryCode = HammingCode.convertByteArraysToBinary(bytes);
+        System.out.println("Binary code: " + binaryCode);
+        System.out.println(CODING_DISTANCE_CHOICE);
         while (true) {
             String number = sc.nextLine();
             if(number.equals(THREE)) {
                 System.out.println("Enter place for mistake (if you don't want to place mistake, enter -1)");
-                while (true) {
-                    HammingCode hammingCode = new HammingCode();
-                    byte[] bytes = string.toString().getBytes();
-                    StringBuilder binaryCode = HammingCode.convertByteArraysToBinary(bytes);
-                    System.out.println(binaryCode.length());
-                    int place = sc.nextInt();
-                    if((place != -1 && place < 1) || place > binaryCode.length()) {
-                        System.out.println(TRY_AGAIN);
-                        continue;
-                    }
-                    System.out.println("Binary code: " + binaryCode);
-                    binaryCode = hammingCode.insertBits(binaryCode);
-                    StringBuilder bits = hammingCode.findBits(binaryCode);
-                    binaryCode = hammingCode.setBits(binaryCode, bits);
-                    HammingCode.doCodingDistanceThree(binaryCode, place, hammingCode);
-                    break;
-                }
+                doEncodeThreeHD(binaryCode, hammingCode);
                 break;
-
             } else if(number.equals(FOUR)) {
-
+                doEncodeFourHD(binaryCode, hammingCode);
+                break;
             } else System.out.println(TRY_AGAIN);
         }
+    }
 
+    public static void doEncodeThreeHD(StringBuilder binaryCode, HammingCode hammingCode) {
+        Scanner sc = new Scanner(System.in);
+        binaryCode = hammingCode.insertBits(binaryCode);
+        StringBuilder bits = hammingCode.findBits(binaryCode);
+        binaryCode = hammingCode.setBits(binaryCode, bits);
+        while (true) {
+            System.out.println("Max value that can be entered: " + binaryCode.length());
+            int place = sc.nextInt();
+            if((place != -1 && place < 1) || place > binaryCode.length()) {
+                System.out.println(TRY_AGAIN);
+                continue;
+            }
+            HammingCode.doEncodeDecodeDistanceThree(binaryCode, place, hammingCode);
+            break;
+        }
+    }
 
+    public static void doEncodeFourHD(StringBuilder binaryCode, HammingCode hammingCode) {
+        boolean value = false;
+        Scanner sc = new Scanner(System.in);
+        binaryCode = hammingCode.insertBits(binaryCode);
+        StringBuilder bits = hammingCode.findBits(binaryCode);
+        binaryCode = hammingCode.setBits(binaryCode, bits);
+        Character c = hammingCode.countXOR(binaryCode);
+        binaryCode.insert(0, c);
+        System.out.println("Hamming Code: " + binaryCode);
+        System.out.println("Enter place for mistake (if you don't want to place mistake, enter -1)");
+        System.out.println("Max value that can be entered: " + binaryCode.length());
+        int i = 1;
+        while (i < 3) {
+            int place = sc.nextInt();
+            if((place != -1 && place < 1) || place > binaryCode.length()) {
+                System.out.println(TRY_AGAIN);
+                continue;
+            }
+            if(place == -1)
+                break;
+            value = true;
+            binaryCode = hammingCode.reverseValue(binaryCode, place - 1);
+            i++;
+        }
+        if(value)
+            System.out.println("Message with mistakes: " + binaryCode);
+        HammingCode.doCodingDistanceFour(binaryCode, hammingCode);
     }
 }
